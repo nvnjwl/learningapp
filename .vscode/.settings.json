@@ -1,0 +1,11 @@
+{
+  "eslint.enable": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.workingDirectories": ["./src"],
+  "workbench.list.horizontalScrolling": true,
+  "zenMode.hideActivityBar": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+}

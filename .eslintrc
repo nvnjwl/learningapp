@@ -1,0 +1,33 @@
+{
+  "ignorePatterns": ["node_modules/*",'*'],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "globals": {
+    "google": true,
+    "console": true,
+    "__VERSION__": true,
+    "__DEV_MODE__": true,
+    "__COMMITHASH__": true,
+    "Uint8Array": true,
+    "Promise": true,
+    "Symbol": true,
+    "require": true,
+    "DocumentTouch": true
+  },
+  "rules": {
+    "no-console": 0,
+    "no-debugger": 1,
+    "func-names": 0,
+    "space-before-function-paren": 0,
+    "no-useless-escape": 0,
+    "comma-dangle": ["error", "never"],
+    "quotes": [2, "single", { "avoidEscape": true }]
+  }
+}
