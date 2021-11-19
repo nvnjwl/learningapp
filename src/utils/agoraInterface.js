@@ -1,5 +1,7 @@
 import { STREAM_STATE } from './../constants/index';
+
 export function AgoraInterface(communicationMenu) {
+    //Agora Interface for the Agora SDK to Communicate with the UI
     var cameraVideoProfile = '480p_4'; // 640 × 480 @ 30fps  & 750kbs
     var client;
     // stream references (keep track of active streams)
@@ -24,12 +26,14 @@ export function AgoraInterface(communicationMenu) {
     }
 
     function broadcastEvent(eventName, eventData) {
+        //broadcast event to all listeners
         if (eventHandlers[eventName]) {
             eventHandlers[eventName](eventData);
         }
     }
 
     function subscribeEvent() {
+        //Subsrcibe to events
         client.on(STREAM_STATE.STREAM_PUBLISHED, function (eventData) {
             console.log('Publish local stream successfully');
             broadcastEvent(STREAM_STATE.STREAM_PUBLISHED, eventData);
@@ -59,21 +63,6 @@ export function AgoraInterface(communicationMenu) {
             remoteStream.play(remoteStreamVideoTagId);
             client.setRemoteVideoStreamType(remoteStream, 1);
             return;
-            if ($('#full-screen-video').is(':empty')) {
-                mainStreamId = remoteId;
-                remoteStream.play('full-screen-video');
-            } else if (remoteId == 49024) {
-                // move the current main stream to miniview
-                remoteStreams[mainStreamId].stop(); // stop the main video stream playback
-                client.setRemoteVideoStreamType(remoteStreams[mainStreamId], 1); // subscribe to the low stream
-                communicationMenu.addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
-                // set the screen-share as the main
-                mainStreamId = remoteId;
-                remoteStream.play('full-screen-video');
-            } else {
-                client.setRemoteVideoStreamType(remoteStream, 1); // subscribe to the low stream
-                communicationMenu.addRemoteStreamMiniView(remoteStream);
-            }
         });
 
         // remove the remote-container when a user leaves the channel
@@ -82,33 +71,26 @@ export function AgoraInterface(communicationMenu) {
             if (remoteStreams[streamId] != undefined) {
                 remoteStreams[streamId].stop(); // stop playing the feed
                 delete remoteStreams[streamId]; // remove stream from list
-                if (streamId == mainStreamId) {
-                    var streamIds = Object.keys(remoteStreams);
-                    var randomId = streamIds[Math.floor(Math.random() * streamIds.length)]; // select from the remaining streams
-                    remoteStreams[randomId].stop(); // stop the stream's existing playback
-                    var remoteContainerID = '#' + randomId + '_container';
-                    $(remoteContainerID).empty().remove(); // remove the stream's miniView container
-                    remoteStreams[randomId].play('full-screen-video'); // play the random stream as the main stream
-                    mainStreamId = randomId; // set the new main remote stream
-                } else {
-                    var remoteContainerID = '#' + streamId + '_container';
-                    $(remoteContainerID).empty().remove(); //
-                }
+                var remoteContainerID = '#' + streamId + '_container';
+                $(remoteContainerID).empty().remove(); // remove the container
                 broadcastEvent(STREAM_STATE.PEER_LEAVE, streamId);
             }
         });
 
         // show mute icon whenever a remote has muted their mic
         client.on('mute-audio', function (eventData) {
+            // eventData.uid: the uid of the remote user who muted their mic.
             communicationMenu.toggleVisibility('#' + eventData.uid + '_mute', true);
         });
 
         client.on('unmute-audio', function (eventData) {
+            // eventData.uid: the uid of the remote user who unmuted their mic.
             communicationMenu.toggleVisibility('#' + eventData.uid + '_mute', false);
         });
 
         // show user icon whenever a remote has disabled their video
         client.on('mute-video', function (eventData) {
+            // eventData.uid: the uid of the remote user who muted their video.
             var remoteId = eventData.uid;
             // if the main user stops their video select a random user from the list
             if (remoteId != mainStreamId) {
@@ -118,6 +100,7 @@ export function AgoraInterface(communicationMenu) {
         });
 
         client.on('unmute-video', function (eventData) {
+            // eventData.uid: the uid of the remote user who unmuted their video.
             communicationMenu.toggleVisibility('#' + eventData.uid + '_no-video', false);
         });
     }
@@ -137,6 +120,7 @@ export function AgoraInterface(communicationMenu) {
     }
 
     function joinChannel(channelName, uid, token) {
+        // join the channel
         client.join(
             token,
             channelName,
@@ -154,6 +138,7 @@ export function AgoraInterface(communicationMenu) {
 
     // video streams for channel
     function createCameraStream(uid) {
+        // create local stream
         var localStream = AgoraRTC.createStream({
             streamID: uid,
             audio: true,
@@ -182,6 +167,7 @@ export function AgoraInterface(communicationMenu) {
     }
 
     function leaveChannel() {
+        // leave the channel
         client.leave(
             function () {
                 console.log('client leaves channel');
@@ -201,6 +187,7 @@ export function AgoraInterface(communicationMenu) {
     }
 
     function registerEvent(eventName, callback) {
+        // register event listener for the given event name
         eventHandlers[eventName] = callback;
     }
 

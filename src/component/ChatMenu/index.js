@@ -4,6 +4,7 @@ export default function ChatMenu(applicationConfig) {
     var chatMenuUI;
     var chatInterface;
     this.applicationConfig = applicationConfig;
+
     function render() {
         if (!applicationConfig) {
             console.error('applicationConfig not found');
@@ -22,17 +23,20 @@ export default function ChatMenu(applicationConfig) {
             registerEvents();
             chatInterface.initInterface();
             applicationConfig.chatInterface = chatInterface;
+            initClientAndJoinChannel();
+            handleDummyChat();
         } else {
             console.log('chatInterface not found');
         }
-        initClientAndJoinChannel();
     }
 
     function registerEvents() {
+        //Register events for chat menu
         chatInterface.registerEvent('chatReceived', onChatReceived);
     }
 
     function renderChatMenu() {
+        // Render chat menu with default UI
         let staticHTML = `
 				<section class="chatbox">
 					<section class="chat-window">
@@ -49,6 +53,7 @@ export default function ChatMenu(applicationConfig) {
     }
 
     function onChatReceived(eventData) {
+        //handle chat received event amd render chat
         console.log('onChatReceived');
         let chatMessage = eventData.data;
         let chatMessageUI = document.createElement('article');
@@ -78,7 +83,7 @@ export default function ChatMenu(applicationConfig) {
 
     //send chat on enter
     function onChatSend() {
-        //Read the message from input text
+        //Read the message from input text and send it to chat interface
         let message = chatMenuUI.querySelector('.sendChatText').value;
         onChatReceived({
             data: {
@@ -104,14 +109,7 @@ export default function ChatMenu(applicationConfig) {
         });
     }
 
-    function initClientAndJoinChannel() {
-        var agoraAppId = applicationConfig.agoraAppId;
-        var agoraToken = applicationConfig.agoraToken;
-        var agoraChannel = applicationConfig.agoraChannel;
-        let agoraUserName = applicationConfig.agoraUserName;
-        let agoraUserId = applicationConfig.agoraUserId;
-        chatInterface.initClientAndJoinChannel(agoraAppId, agoraToken, agoraChannel, agoraUserId);
-
+    function handleDummyChat() {
         setTimeout(function () {
             onChatReceived({
                 data: {
@@ -135,6 +133,15 @@ export default function ChatMenu(applicationConfig) {
                 }
             });
         }, 2000);
+    }
+
+    function initClientAndJoinChannel() {
+        var agoraAppId = applicationConfig.agoraAppId;
+        var agoraToken = applicationConfig.agoraToken;
+        var agoraChannel = applicationConfig.agoraChannel;
+        let agoraUserName = applicationConfig.agoraUserName;
+        let agoraUserId = applicationConfig.agoraUserId;
+        chatInterface.initClientAndJoinChannel(agoraAppId, agoraToken, agoraChannel, agoraUserId);
     }
 
     return {

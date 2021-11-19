@@ -38,6 +38,7 @@ export default class PermissionMenu {
         var agoraToken = this.applicationConfig.agoraToken;
         var agoraChannel = this.applicationConfig.agoraChannel;
         let agoraUserName = this.applicationConfig.agoraUserName;
+        let agoraUserId = this.applicationConfig.agoraUserId;
         if (!agoraUserName) {
             agoraUserName = 'user' + Math.floor(Math.random() * 100);
         }
@@ -66,6 +67,10 @@ export default class PermissionMenu {
                   <input type="text" id="form-uname" class="form-control" value=${agoraUserName}/>
                   <label for="form-uname">User Name</label>
                 </div>
+               <div class="md-form mb-4">
+                  <input type="text" id="form-uid" class="form-control" value='${agoraUserId}' />
+                  <label for="form-uname">User Id</label>
+                </div>
               </div>
               <div class="modal-footer d-flex justify-content-center">
                 <button id="join-channel" class="btn btn-default">Join Channel</button>
@@ -77,28 +82,32 @@ export default class PermissionMenu {
     }
 
     attachEventListener() {
-        var agoraAppId = $('#form-appid').value;
-        var agoraToken = $('#form-token').value;
-        var agoraChannel = $('#form-channel').value;
-        let agoraUserName = $('#form-uname').value;
-
-        if (agoraAppId) {
-            applicationConfig.agoraAppId = agoraAppId;
-        }
-        if (agoraToken) {
-            applicationConfig.agoraToken = agoraToken;
-        }
-        if (agoraChannel) {
-            applicationConfig.agoraChannel = agoraChannel;
-        }
-        if (agoraUserName) {
-            applicationConfig.agoraUserName = agoraUserName;
-        }
         $('#join-channel').click(this.onJoinChannelClick.bind(this));
     }
 
     onJoinChannelClick() {
         console.log('onJoinChannelClick');
+        var agoraAppId = $('#form-appid').val();
+        var agoraToken = $('#form-token').val();
+        var agoraChannel = $('#form-channel').val();
+        let agoraUserName = $('#form-uname').val();
+        let agoraUserId = $('#form-uid').val();
+
+        if (agoraAppId) {
+            this.applicationConfig.agoraAppId = agoraAppId;
+        }
+        if (agoraToken) {
+            this.applicationConfig.agoraToken = agoraToken;
+        }
+        if (agoraChannel) {
+            this.applicationConfig.agoraChannel = agoraChannel;
+        }
+        if (agoraUserName) {
+            this.applicationConfig.agoraUserName = agoraUserName;
+        }
+        if (agoraUserId) {
+            this.applicationConfig.agoraUserId = agoraUserId;
+        }
         this.makeCommunicationUI();
     }
 

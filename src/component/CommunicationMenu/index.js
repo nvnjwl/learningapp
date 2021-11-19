@@ -84,7 +84,7 @@ export default function CommunicationMenu(applicationConfig) {
                 <i id="mic-icon" class="fas fa-microphone-slash"></i>
             </div>
             <div id="localUserName" class="col userName">
-                <span>${agoraUserName}</span>
+                <span>You : ${agoraUserName}</span>
             </div>
             <div id="no-local-video" class="col text-center">
                 <i id="user-icon" class="fas fa-user"></i>
@@ -227,6 +227,9 @@ export default function CommunicationMenu(applicationConfig) {
 		    <div id="${streamId}_container" class="remote-stream-container fhw">
                 <div id="${streamId}_mute" class="mute-overlay" style="display: block">
                     <i class="fas fa-microphone-slash"></i>
+                </div>
+                <div class="col userName">
+                    <span>Remote : ${streamId}</span>
                 </div>
                 <div id="${streamId}_no-video" class="no-video-overlay text-center">
                     <i class="fas fa-user"></i>

@@ -10,14 +10,13 @@ export default class AgoraVideoCall {
         this.applicationConfig.OBJ.AgoraVideoCall = this;
         this.registerBodyOnload();
     }
-    static get TempBuildVersion() {
-        return '__COMMITHASH__';
-    }
+
     static get version() {
-        return '1.0.0';
+        return '1.0.4';
     }
+
     static get buildInfo() {
-        return `Build Creation : 15 November 2021
+        return `Build Creation : 18 November 2021
     Issue Fixes : 
       1. Basic Chat Demo
       2. No UI for Media Permission`;
@@ -54,5 +53,5 @@ export default class AgoraVideoCall {
         this.chatAPP = chatAPP;
     }
 }
-console.log('middleware 1657');
+console.log('Version :1.0.4');
 window.AgoraVideoCall = AgoraVideoCall;
