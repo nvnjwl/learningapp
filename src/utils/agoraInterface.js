@@ -94,6 +94,7 @@ export function AgoraInterface(communicationMenu) {
                     var remoteContainerID = '#' + streamId + '_container';
                     $(remoteContainerID).empty().remove(); //
                 }
+                broadcastEvent(STREAM_STATE.PEER_LEAVE, streamId);
             }
         });
 
@@ -187,17 +188,7 @@ export function AgoraInterface(communicationMenu) {
                 localStreams.camera.stream.stop(); // stop the camera stream playback
                 client.unpublish(localStreams.camera.stream); // unpublish the camera stream
                 localStreams.camera.stream.close(); // clean up and close the camera stream
-                $('#remote-streams').empty(); // clean up the remote feeds
-                //disable the UI elements
-                $('#mic-btn').prop('disabled', true);
-                $('#video-btn').prop('disabled', true);
-                $('#screen-share-btn').prop('disabled', true);
-                $('#exit-btn').prop('disabled', true);
-                // hide the mute/no-video overlays
-                toggleVisibility('#mute-overlay', false);
-                toggleVisibility('#no-local-video', false);
-                // show the modal overlay to join
-                $('#modalForm').modal('show');
+                broadcastEvent(STREAM_STATE.SELF_LEAVE);
             },
             function (err) {
                 console.log('client leave failed ', err); //error handling

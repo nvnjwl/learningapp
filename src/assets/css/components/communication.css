@@ -20,6 +20,12 @@
   transform: translate(-50%,-50%);
 }
 
+.userName{
+  z-index: 100;
+  position: absolute;
+}
+
+
 .fhw{
     position: absolute;
     width: 100%;
@@ -76,11 +82,18 @@
 }
 
 .remote-stream-container { 
+  position: relative; 
   display: inline-block;
 }
 
 #remote-streams {
   height: 100%;
+}
+
+.localVideo video{
+  width: 100%;
+  height: 100%;
+  left: 0px;
 }
 
 #local-video {
@@ -89,6 +102,7 @@
   z-index: 1;
   height: 100%;
   max-width: 100%;
+  top:0px;
 }
 
 .eachVideoParent{
@@ -111,8 +125,14 @@
   position: absolute;
   z-index: 1;
   height: 100% !important;
-  width: 80%;
+  width: 100%;
   max-width: 500px;
+}
+
+.remoteVideo video{
+  width: 100%;
+  height: 100%;
+  left: 0px;
 }
 
 #mute-overlay {
@@ -148,7 +168,7 @@
 }
 
 .no-video-overlay {
-  width: 80%;
+  width: 100%;
 }
 
 #screen-share-btn-container {

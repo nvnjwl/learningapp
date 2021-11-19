@@ -1,0 +1,27 @@
+checklist
+Following Items have been Done and are in Working Condition
+
+
+Live Video Room Channel 										:	Yes
+
+Multiple User can Join 	Channel							: Yes
+User Can leave	Channel											: Yes
+
+User  Mute / Unmute Capability							: Yes
+Peer Mute/ Unmute Notification 							: Yes
+
+User  Enable  / Disable Camera							: Yes
+Peer  Enable  / Disable Camera	Notification	: Yes
+
+Steam Video UI 																: Yes
+Channel Chat UI																: Yes
+
+RTM SDK Integration 													: Yes
+Peer Can send MEssage To The Channel					: Yes
+Peer Recieve the Messsge from Channel					: No
+
+( I did Try to Run the Sample Code but i was not able to Listen to Events on Channel Communication)
+(While i am Getting Success on Sending Message Event, Could have easily be Debugged but Got stucked)
+
+
+

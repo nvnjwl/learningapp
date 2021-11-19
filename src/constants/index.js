@@ -6,7 +6,12 @@ let STREAM_STATE = {
     MUTE_AUDIO: 'mute-audio',
     UNMUTE_AUDIO: 'unmute-audio',
     MUTE_VIDEO: 'mute-video',
-    UNMUTE_VIDEO: 'unmute-video'
+    UNMUTE_VIDEO: 'unmute-video',
+    SELF_LEAVE: 'self-leave'
 };
 
-export { STREAM_STATE };
+let AVATAR_LIST = {
+    default: '//gravatar.com/avatar/00034587632094500000000000000000?d=retro'
+};
+
+export { STREAM_STATE, AVATAR_LIST };

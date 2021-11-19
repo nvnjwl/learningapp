@@ -1,6 +1,7 @@
 import { AgoraInterface } from './../../utils/agoraInterface';
-import { STREAM_STATE } from './../../constants/index';
+import { STREAM_STATE, AVATAR_LIST } from './../../constants/index';
 import ChatMenu from '../ChatMenu';
+import { __el } from '../../utils/dom';
 export default function CommunicationMenu(applicationConfig) {
     let agoraInterface;
     let communicationMenuUI;
@@ -48,6 +49,8 @@ export default function CommunicationMenu(applicationConfig) {
     function registerEvents() {
         agoraInterface.registerEvent(STREAM_STATE.STREAM_PUBLISHED, onStreamPublished);
         agoraInterface.registerEvent(STREAM_STATE.STREAM_ADDED, onStreramAdded);
+        agoraInterface.registerEvent(STREAM_STATE.PEER_LEAVE, onRemotePeerLeave);
+        agoraInterface.registerEvent(STREAM_STATE.SELF_LEAVE, exitApplication);
     }
 
     function onStreamPublished(eventData) {
@@ -86,7 +89,7 @@ export default function CommunicationMenu(applicationConfig) {
             <div id="no-local-video" class="col text-center">
                 <i id="user-icon" class="fas fa-user"></i>
             </div>
-            <div id="local-video" class="col p-0"></div>
+            <div id="local-video" class="localVideo"></div>
         </div>`;
         localStreamContainer.innerHTML = staticHTML;
         parentElement.appendChild(localStreamContainer);
@@ -144,10 +147,14 @@ export default function CommunicationMenu(applicationConfig) {
 
         $('#exit-btn').click(function () {
             console.log('so sad to see you leave the channel');
-            leaveChannel();
+            agoraInterface.leaveChannel();
         });
     }
 
+    function exitApplication() {
+        console.log('exitApplication');
+        window.location.reload();
+    }
     function toggleBtn(btn) {
         btn.toggleClass('btn-dark').toggleClass('btn-danger');
     }
@@ -166,14 +173,25 @@ export default function CommunicationMenu(applicationConfig) {
     }
 
     function toggleMic(localStream) {
-        toggleBtn($('#mic-btn')); // toggle button colors
-        $('#mic-icon').toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
-        if ($('#mic-icon').hasClass('fa-microphone')) {
+        let micBtn = $('#mic-btn');
+        let micIcon = $('#mic-icon');
+        if (micIcon.hasClass('fa-microphone-slash')) {
             localStream.unmuteAudio(); // enable the local mic
             toggleVisibility('#mute-overlay', false); // hide the muted mic icon
+
+            micBtn.removeClass('btn-danger');
+            micBtn.addClass('btn-dark');
+
+            micIcon.removeClass('fa-microphone-slash');
+            micIcon.addClass('fa-microphone');
         } else {
             localStream.muteAudio(); // mute the local mic
             toggleVisibility('#mute-overlay', true); // show the muted mic icon
+            micBtn.removeClass('btn-dark');
+            micBtn.addClass('btn-danger');
+
+            micIcon.removeClass('fa-microphone');
+            micIcon.addClass('fa-microphone-slash');
         }
     }
 
@@ -194,27 +212,30 @@ export default function CommunicationMenu(applicationConfig) {
         return videoTagId;
     }
 
+    function onRemotePeerLeave(streamId) {
+        console.log('onRemotePeerLeave');
+        let peerWindowId = `remoteStreamContainer${streamId}`;
+        let remoteStreamContainer = __el(peerWindowId);
+        remoteStreamContainer.__removeEl();
+    }
+
     function makeRemoteStreamVideoView(streamId) {
-        let videoTagId = '';
+        let videoTagParentId = `agora_remote_${streamId}`;
         try {
-            let remoteStreamContainer = videoStreamOuter.__createDiv('eachVideoStream', `${streamId}_container`);
-            videoTagId = `video${streamId}`;
+            let remoteStreamContainer = videoStreamOuter.__createDiv('eachVideoStream', `remoteStreamContainer${streamId}`);
             let staticHTML = `
+		    <div id="${streamId}_container" class="remote-stream-container fhw">
                 <div id="${streamId}_mute" class="mute-overlay" style="display: block">
                     <i class="fas fa-microphone-slash"></i>
                 </div>
                 <div id="${streamId}_no-video" class="no-video-overlay text-center">
                     <i class="fas fa-user"></i>
                 </div>
-                <div id="agora_remote_${streamId}" class="fhw remote-video">
-                    <div id="player_${streamId}" class="fhw">
-                        <video id=${videoTagId} style="width: 100%; height: 100%; position: absolute; object-fit: cover"
-                            autoplay="" muted="" playsinline=""></video>
-                        <audio id="audio${streamId}" playsinline=""></audio>
-                    </div>
+                <div id=${videoTagParentId} class="fhw remote-video remoteVideo">
+                    
             </div>`;
             remoteStreamContainer.innerHTML = staticHTML;
-            return videoTagId;
+            return videoTagParentId;
         } catch (error) {
             console.log(error);
         }
@@ -224,6 +245,7 @@ export default function CommunicationMenu(applicationConfig) {
         render: render,
         toggleVideo: toggleVideo,
         enableUiControls: enableUiControls,
-        addRemoteStreamMiniView: addRemoteStreamMiniView
+        addRemoteStreamMiniView: addRemoteStreamMiniView,
+        toggleVisibility: toggleVisibility
     };
 }
