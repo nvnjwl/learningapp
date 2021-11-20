@@ -37,6 +37,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "agora-access-token": "^2.0.4",
     "git-revision-webpack-plugin": "^5.0.0"
   }
 }

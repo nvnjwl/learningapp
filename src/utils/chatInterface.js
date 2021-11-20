@@ -99,10 +99,10 @@ export function ChatInterface(chatMenu) {
                     message: message.text,
                     username: memberId,
                     timestamp: new Date().toLocaleString(),
-                    userType: 'local'
+                    userType: 'remote'
                 };
                 let chatObj = { data: chatData };
-                chatMenu.onChatReceived(chatObj);
+                broadcastEvent('onChatReceived', chatObj);
             }
         });
     }

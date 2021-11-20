@@ -1,5 +1,7 @@
 import { ChatInterface } from './../../utils/ChatInterface';
 import { AVATAR_LIST } from '../../constants';
+import { TokenBuilder } from './../../utils/token';
+
 export default function ChatMenu(applicationConfig) {
     var chatMenuUI;
     var chatInterface;
@@ -18,6 +20,7 @@ export default function ChatMenu(applicationConfig) {
         }
         renderChatMenu();
         applyEventListener();
+        handleTokenBuilder();
         if (typeof ChatInterface !== 'undefined') {
             chatInterface = new ChatInterface(this);
             registerEvents();
@@ -30,9 +33,17 @@ export default function ChatMenu(applicationConfig) {
         }
     }
 
+    //handle Token Builder interface
+    function handleTokenBuilder() {
+        let tokenBuiler = new TokenBuilder(applicationConfig);
+        tokenBuiler.initInterface();
+        let RTMToken = tokenBuiler.generateRTMTokenFromAccount();
+        applicationConfig.RTMToken = RTMToken;
+    }
+
     function registerEvents() {
         //Register events for chat menu
-        chatInterface.registerEvent('chatReceived', onChatReceived);
+        chatInterface.registerEvent('onChatReceived', onChatReceived);
     }
 
     function renderChatMenu() {
@@ -103,7 +114,10 @@ export default function ChatMenu(applicationConfig) {
         console.log('applyEventListener');
         chatMenuUI.querySelector('.sendChatButton').addEventListener('click', onChatSend);
         chatMenuUI.querySelector('.sendChatText').addEventListener('keyup', function (e) {
-            if (e.keyCode === 13 && !e.shiftKey) {
+            e.stopPropagation();
+            e.preventDefault();
+            let message = chatMenuUI.querySelector('.sendChatText').value;
+            if (e.keyCode === 13 && !e.shiftKey && message) {
                 onChatSend();
             }
         });
