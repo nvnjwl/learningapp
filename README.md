@@ -18,6 +18,16 @@ HTML Supported Browser
 ```
 
 
+### How To generate Token
+
+Follow step1.jpg and step2.jpg
+
+```
+Go to 
+https://console.agora.io/token/
+Genarate Temp Token
+```
+
 ### Features
 
 All the users in the room should have the below privileges.

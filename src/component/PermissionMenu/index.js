@@ -26,6 +26,24 @@ export default class PermissionMenu {
         this.renderPermissionMenuItems(permissionMenuPopup);
         // permissionMenuButton.innerHTML = '<div class="permission-menu-button">Permission Menu</div>';
         // permissionMenuButton.addEventListener('click', this.onPermissionMenuClick.bind(this));
+        this.renderInstructions();
+    }
+
+    renderInstructions() {
+        //Render instructions
+        let instructionsUI = this.permissionMenuUI.__createDiv('instructions', '');
+        let instructions = `
+        Instructions
+        <pre>
+          1) You need to Create Your own Agora AppId.
+          2) You need to Create Your own Token.
+          3) You need to Create Your own ChannelName , Use the Same Channel Name accross Other instances.
+          4) Set  your Name.
+          5) Set your Id (Optional) Id is getting generated on ramdom basis.
+          6) Here i have used my  Agora appId and Agora token , Agora Channel Name.
+          7) Token gets expired after 24 hours
+        </pre>`;
+        instructionsUI.innerHTML = instructions;
     }
 
     onPermissionMenuClick(event) {
