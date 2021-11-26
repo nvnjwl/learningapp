@@ -42,7 +42,9 @@ export default class PermissionMenu {
           5) Set your Id (Optional) Id is getting generated on ramdom basis.
           6) Here i have used my  Agora appId and Agora token , Agora Channel Name.
           7) Token gets expired after 24 hours
-        </pre>`;
+        </pre>
+          <a href="https://console.agora.io/">Jump to Agora Console </a>`;
+
         instructionsUI.innerHTML = instructions;
     }
 
@@ -70,23 +72,23 @@ export default class PermissionMenu {
               </div>
               <div class="modal-body mx-3">
                 <div class="md-form mb-4">
-                  <input type="text" id="form-appid" class="form-control" value=${agoraAppId}>
+                  <input type="text" id="form-appid" class="form-control" value="${agoraAppId}" placeholder="Enter Agora AppId" >
                   <label for="form-appid">Agora AppId</label>
                 </div>
                 <div class="md-form mb-4">
-                  <input type="text" id="form-token" class="form-control" value=${agoraToken}>
+                  <input type="text" id="form-token" class="form-control" value="${agoraToken}" placeholder="Enter Agora Token"/>
                   <label for="form-token">Agora Token</label>
                 </div>
                 <div class="md-form mb-4">
-                  <input type="text" id="form-channel" class="form-control" value=${agoraChannel}>
+                  <input type="text" id="form-channel" class="form-control" value="${agoraChannel}" placeholder="Enter Agora Channel"/>
                   <label for="form-channel">Channel</label>
                 </div>
                 <div class="md-form mb-4">
-                  <input type="text" id="form-uname" class="form-control" value=${agoraUserName}/>
+                  <input type="text" id="form-uname" class="form-control" value="${agoraUserName}" placeholder="Enter  User name"/>
                   <label for="form-uname">User Name</label>
                 </div>
                <div class="md-form mb-4">
-                  <input type="text" id="form-uid" class="form-control" value='${agoraUserId}' />
+                  <input type="text" id="form-uid" class="form-control" value="${agoraUserId}" placeholder="Enter User IDd"/>
                   <label for="form-uname">User Id</label>
                 </div>
               </div>
@@ -110,7 +112,26 @@ export default class PermissionMenu {
         var agoraChannel = $('#form-channel').val();
         let agoraUserName = $('#form-uname').val();
         let agoraUserId = $('#form-uid').val();
-
+        if (!agoraAppId) {
+            alert('Please enter App Id , Use your App Id');
+            return;
+        }
+        if (!agoraToken) {
+            alert('Please enter Agora Token, Generate a Token from Agora Console');
+            return;
+        }
+        if (!agoraChannel) {
+            alert('Please enter Channel Name');
+            return;
+        }
+        if (!agoraUserName) {
+            alert('Please enter UserName');
+            return;
+        }
+        if (!agoraUserId) {
+            alert('Please enter User ID');
+            return;
+        }
         if (agoraAppId) {
             this.applicationConfig.agoraAppId = agoraAppId;
         }

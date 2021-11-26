@@ -2,7 +2,7 @@
     console.log('middleware');
 
     let agoraAppId = '1eb1dd97c1104a58a773116df9494cdd';
-    let agoraToken = '0061eb1dd97c1104a58a773116df9494cddIAAYFQPmTSJEmbth1YgD3NCHwqdEIjg7TunH9moAc70NDf+vWnwAAAAAEABw2xAIUsKYYQEAAQBswphh';
+    let agoraToken = '';
     let agoraChannel = 'learning101';
     let RTMToken = '0061eb1dd97c1104a58a773116df9494cddIACaDtLjSD54QqIWu15LqHXC2sNjCxH/W7ycIoRP9igUZmLWbU8AAAAAEAAJlZGjKgyZYQEA6AMqDJlh';
     let RTMToken2 = '0061eb1dd97c1104a58a773116df9494cddIABAo6vnGDLGsLtLJJi1Ycql1lBw1FbOSCvftq7yTXJ657E681kAAAAAEAA7DHR';
