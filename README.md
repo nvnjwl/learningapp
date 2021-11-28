@@ -104,6 +104,13 @@ Relase Date 18/11
 2. RTM SDK integration
 ```
 
+## v1.0.4
+Relase Date 28/11
+```
+1. Migration to Agora 4.X SDK
+2. Active User Detection
+```
+
 ## Authors
 
 ```

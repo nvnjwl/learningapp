@@ -6,7 +6,7 @@
 	width: 400px;
 	height: 100%;
 	background: rgba(0,0,0,0.5);
-	z-index: 1;
+	z-index: 99999;
 	display: block;
 	display: flex;
 	align-items: center;
@@ -113,7 +113,7 @@
 }
 .msg {
     display: inline-block;
-    font-size: 11pt;
+    font-size: 18pt;
     line-height: 13pt;
     color: rgba(255,255,255,.7);
     margin: 0 0 4px 0;
@@ -123,7 +123,7 @@
 }
 .timestamp {
     color: rgba(0,0,0,.38);
-    font-size: 8pt;
+    font-size: 13pt;
     margin-bottom: 10px;
 }
 .username {

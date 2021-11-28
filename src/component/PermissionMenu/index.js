@@ -33,17 +33,29 @@ export default class PermissionMenu {
         //Render instructions
         let instructionsUI = this.permissionMenuUI.__createDiv('instructions', '');
         let instructions = `
-        Instructions
-        <pre>
-          1) You need to Create Your own Agora AppId.
-          2) You need to Create Your own Token.
-          3) You need to Create Your own ChannelName , Use the Same Channel Name accross Other instances.
-          4) Set  your Name.
-          5) Set your Id (Optional) Id is getting generated on ramdom basis.
-          6) Here i have used my  Agora appId and Agora token , Agora Channel Name.
-          7) Token gets expired after 24 hours
-        </pre>
-          <a href="https://console.agora.io/">Jump to Agora Console </a>`;
+            Whats New in Agora Chat Application
+          <ul>      
+          <li>Based on Agora 4.7.3 SDK</li>
+          <li>Updated Agora Interface</li>
+          <li>Implemented Active User Detection</li>
+          <li>Chat : Working</li>
+          <li>Multi Host Strem : Working</li>
+          <li>Mute / Unmute / Enable Camera / Disable Camera /Join Room / Leave Room Working </li>
+          <li>More Details ${window.location.href}readme.md</li>
+        </ul>
+            Instructions
+          <ul>      
+          <li>1) You need to Create Your own Agora AppId.</li>
+          <li>2) You need to Create Your own Token.</li>
+          <li>3) You need to Create Your own ChannelName , Use the Same Channel Name accross Other instances.</li>
+          <li>4) Set  your Name.</li>
+          <li>5) Set your Id (Optional) Id is getting generated on ramdom basis.</li>
+          <li>6) Here i have used my  Agora appId and Agora token , Agora Channel Name.</li>
+          <li>7) Token gets expired after 24 hours</li>
+          <li>8) Sample Hard Code Token (Might Expired in future)</li>
+          <li><span class="dummyText" contenteditable="false">${window.sampleAgoraToken}</span></li>      
+          <li><a href="https://console.agora.io/">Jump to Agora Console </a></li>;
+        </ul>`;
 
         instructionsUI.innerHTML = instructions;
     }

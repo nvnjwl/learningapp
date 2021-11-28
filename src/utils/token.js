@@ -6,7 +6,7 @@ export function TokenBuilder(applicationConfig) {
     var account = applicationConfig.accountName;
 
     function initInterface() {
-        console.log('TokenBuilder: initInterface');
+        console.log('TokenBuilder: initInterface', account);
     }
 
     function generateRTMTokenFromAccount() {

@@ -1,11 +1,15 @@
 import { ChatInterface } from './../../utils/ChatInterface';
 import { AVATAR_LIST } from '../../constants';
 import { TokenBuilder } from './../../utils/token';
+import { __el } from '../../utils/dom';
 
 export default function ChatMenu(applicationConfig) {
     var chatMenuUI;
     var chatInterface;
     this.applicationConfig = applicationConfig;
+    let agoraUserName = applicationConfig.agoraUserName;
+    let agoraUserId = applicationConfig.agoraUserId;
+    applicationConfig.accountName = agoraUserName;
 
     function render() {
         if (!applicationConfig) {
@@ -63,10 +67,29 @@ export default function ChatMenu(applicationConfig) {
         chatMenuUI.innerHTML = staticHTML;
     }
 
+    // function appendStreamName(streamId, userName) {
+    //     console.log('appendStreamName', streamId, userName);
+    //     let remoteContainer = __el(`remoteStreamContainer${streamId}`);
+    //     if (!remoteContainer) {
+    //         return;
+    //     }
+    //     let spanClassList = remoteContainer.getElementsByClassName('userNameSpan');
+    //     if (spanClassList && spanClassList.length > 0) {
+    //         spanClassList[0].innerHTML = `Remote:${userName}:${streamId}`;
+    //     }
+    // }
+
     function onChatReceived(eventData) {
         //handle chat received event amd render chat
-        console.log('onChatReceived');
+        console.log('onChatReceived', eventData);
         let chatMessage = eventData.data;
+        let chatMessageString = chatMessage.message;
+        // if (chatMessageString && chatMessageString.indexOf('INFO') !== -1 && chatMessageString.split(':').length > 1) {
+        //     let userName = chatMessageString.split(':')[1];
+        //     let streamId = chatMessageString.split(':')[2];
+        //     appendStreamName(streamId, userName);
+        //     return;
+        // }
         let chatMessageUI = document.createElement('article');
         chatMessageUI.classList.add('msg-container');
         if (chatMessage.userType == 'local') {
@@ -100,7 +123,7 @@ export default function ChatMenu(applicationConfig) {
             data: {
                 id: 0,
                 message: message,
-                username: 'Admin',
+                username: agoraUserName,
                 timestamp: new Date().toLocaleString(),
                 userType: 'local'
             }
@@ -125,27 +148,8 @@ export default function ChatMenu(applicationConfig) {
 
     function handleDummyChat() {
         setTimeout(function () {
-            onChatReceived({
-                data: {
-                    id: 0,
-                    message: 'Hi guys Welcome to our Application',
-                    username: 'Admin',
-                    timestamp: new Date().toLocaleString(),
-                    userType: 'local'
-                }
-            });
-        }, 1000);
-
-        setTimeout(function () {
-            onChatReceived({
-                data: {
-                    id: 0,
-                    message: 'Thank you all for having me',
-                    username: 'Guest',
-                    timestamp: new Date().toLocaleString(),
-                    userType: 'remote'
-                }
-            });
+            let firstMessage = `INFO:${agoraUserName}:${agoraUserId}`;
+            chatInterface.sendChannelMessage(firstMessage);
         }, 2000);
     }
 

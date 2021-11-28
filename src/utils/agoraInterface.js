@@ -20,6 +20,7 @@ export function AgoraInterface(communicationMenu) {
     var eventHandlers = {};
 
     function initInterface() {
+        //Migrating to Agora SDK V4 from V3
         client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
         AgoraRTC.Logger.enableLogUpload(); // auto upload logs
         subscribeEvent();
@@ -106,6 +107,7 @@ export function AgoraInterface(communicationMenu) {
     }
 
     function initClientAndJoinChannel(agoraAppId, token, channelName, uid) {
+        //TODO naveen 1
         // init Agora SDK
         client.init(
             agoraAppId,
@@ -120,6 +122,7 @@ export function AgoraInterface(communicationMenu) {
     }
 
     function joinChannel(channelName, uid, token) {
+        //TODO Naveen 2
         // join the channel
         client.join(
             token,

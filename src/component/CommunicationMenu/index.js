@@ -1,4 +1,4 @@
-import { AgoraInterface } from './../../utils/agoraInterface';
+import { AgoraInterface } from './../../utils/agoraInterface4';
 import { STREAM_STATE, AVATAR_LIST } from './../../constants/index';
 import ChatMenu from '../ChatMenu';
 import { __el } from '../../utils/dom';
@@ -11,7 +11,7 @@ export default function CommunicationMenu(applicationConfig) {
     var agoraToken = applicationConfig.agoraToken;
     var agoraChannel = applicationConfig.agoraChannel;
     let agoraUserName = applicationConfig.agoraUserName;
-    let agoraUserId = makeUserId(agoraUserName);
+    let agoraUserId = applicationConfig.agoraUserId;
 
     function render() {
         if (!applicationConfig) {
@@ -61,38 +61,50 @@ export default function CommunicationMenu(applicationConfig) {
         console.log('onStreramAdded');
     }
 
-    function makeUserId(agoraUserName) {
-        if (!agoraUserName) {
-            agoraUserName = 'user' + Math.floor(Math.random() * 100);
-        }
-        // let agoraUserId = agoraUserName.toLowerCase().replace(/\s/g, '');
-        let agoraUserId = 1000 + Math.floor(Math.random() * 1000);
-        return agoraUserId;
-    }
 
     function initClientAndJoinChannel() {
         agoraInterface.initClientAndJoinChannel(agoraAppId, agoraToken, agoraChannel, agoraUserId);
     }
 
+    function highLightSpeaker(streamId) {
+        let speaker = __el(`remoteStreamContainer${streamId}`);
+        if (speaker) {
+            speaker.__addClass('highlight');
+        }
+    }
+
+    function removeHighLightSpeaker(streamId) {
+        let speaker = __el(`remoteStreamContainer${streamId}`);
+        if (speaker) {
+            speaker.__removeClass('highlight');
+        }
+    }
+
+    function removeAllHighLightSpeaker() {
+        let eachVideoStreamList = document.getElementsByClassName('eachVideoStream');
+        for (let i = 0; i < eachVideoStreamList.length; i++) {
+            eachVideoStreamList[i].classList.remove('highlight');
+        }
+    }
+
     function renderLocalStreamContainer(parentElement) {
         console.log('renderLocalStreamContainer');
-        let localStreamContainer = document.createElement('div');
-        localStreamContainer.className = 'eachVideoStream localStreamContainer';
+        var localStreamContainer = parentElement.__createDiv('eachVideoStream localStreamContainer', `remoteStreamContainer${agoraUserId}`);
         let staticHTML = `
         <div id="local-stream-container" class="fhw">
             <div id="mute-overlay" class="col">
-                <i id="mic-icon" class="fas fa-microphone-slash"></i>
+                <i id="mic-icon-ol" class="fas fa-microphone-slash"></i>
             </div>
             <div id="localUserName" class="col userName">
-                <span>You : ${agoraUserName}</span>
+                <span>You : ${agoraUserName}(${agoraUserId})</span>
             </div>
             <div id="no-local-video" class="col text-center">
                 <i id="user-icon" class="fas fa-user"></i>
             </div>
-            <div id="local-video" class="localVideo"></div>
+            <div id="local-video" class="localVideo">
+            </div>
         </div>`;
         localStreamContainer.innerHTML = staticHTML;
-        parentElement.appendChild(localStreamContainer);
     }
 
     function renderVideoStreamOuter(parentElement) {
@@ -138,15 +150,15 @@ export default function CommunicationMenu(applicationConfig) {
         $('#exit-btn').prop('disabled', false);
 
         $('#mic-btn').click(function () {
-            toggleMic(localStream);
+            toggleMuteState(localStream);
         });
 
         $('#video-btn').click(function () {
-            toggleVideo(localStream);
+            toggleVideoState(localStream);
         });
 
         $('#exit-btn').click(function () {
-            console.log('so sad to see you leave the channel');
+            console.log('Local User Leave action');
             agoraInterface.leaveChannel();
         });
     }
@@ -155,13 +167,9 @@ export default function CommunicationMenu(applicationConfig) {
         console.log('exitApplication');
         window.location.reload();
     }
+
     function toggleBtn(btn) {
         btn.toggleClass('btn-dark').toggleClass('btn-danger');
-    }
-
-    function toggleScreenShareBtn() {
-        $('#screen-share-btn').toggleClass('btn-danger');
-        $('#screen-share-icon').toggleClass('fa-share-square').toggleClass('fa-times-circle');
     }
 
     function toggleVisibility(elementID, visible) {
@@ -172,42 +180,71 @@ export default function CommunicationMenu(applicationConfig) {
         }
     }
 
-    function toggleMic(localStream) {
+    function toggleMuteState() {
         let micBtn = $('#mic-btn');
         let micIcon = $('#mic-icon');
         if (micIcon.hasClass('fa-microphone-slash')) {
-            localStream.unmuteAudio(); // enable the local mic
-            toggleVisibility('#mute-overlay', false); // hide the muted mic icon
-
+            agoraInterface.unMuteAudio();
+            toggleVisibility('#mute-overlay', false);
             micBtn.removeClass('btn-danger');
             micBtn.addClass('btn-dark');
-
             micIcon.removeClass('fa-microphone-slash');
             micIcon.addClass('fa-microphone');
         } else {
-            localStream.muteAudio(); // mute the local mic
-            toggleVisibility('#mute-overlay', true); // show the muted mic icon
+            agoraInterface.muteAudio();
+            toggleVisibility('#mute-overlay', true);
             micBtn.removeClass('btn-dark');
             micBtn.addClass('btn-danger');
-
             micIcon.removeClass('fa-microphone');
             micIcon.addClass('fa-microphone-slash');
         }
     }
 
-    function toggleVideo(localStream) {
-        toggleBtn($('#video-btn')); // toggle button colors
-        $('#video-icon').toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
+    function toggleVideoState() {
+        toggleBtn($('#video-btn'));
+        $('#video-icon').toggleClass('fa-video').toggleClass('fa-video-slash');
         if ($('#video-icon').hasClass('fa-video')) {
-            localStream.unmuteVideo(); // enable the local video
-            toggleVisibility('#no-local-video', false); // hide the user icon when video is enabled
+            agoraInterface.unMuteVideo();
+            toggleVisibility('#no-local-video', false);
         } else {
-            localStream.muteVideo(); // disable the local video
-            toggleVisibility('#no-local-video', true); // show the user icon when video is disabled
+            agoraInterface.muteVideo();
+            toggleVisibility('#no-local-video', true);
         }
     }
 
-    function addRemoteStreamMiniView(streamId) {
+    ///Remote Events started
+    function onRemoteMuteAudio(streamId) {
+        console.log('onRemoteMuteAudio');
+        let remoteMuteIcon = document.getElementById(`${streamId}_mute`);
+        if (remoteMuteIcon) {
+            remoteMuteIcon.__show();
+        }
+    }
+
+    function onRemoteMuteVideo(streamId) {
+        console.log('onRemoteMuteVideo');
+        if (__el(`${streamId}_no-video`)) {
+            __el(`${streamId}_no-video`).__show();
+        }
+    }
+
+    function onRemoteUnMuteAudio(streamId) {
+        console.log('onRemoteUnMuteAudio');
+        let remoteMuteIcon = document.getElementById(`${streamId}_mute`);
+        if (remoteMuteIcon) {
+            remoteMuteIcon.__hide();
+        }
+    }
+
+    function onRemoteUnMuteVideo(streamId) {
+        console.log('onRemoteUnMuteVideo');
+        if (__el(`${streamId}_no-video`)) {
+            __el(`${streamId}_no-video`).__hide();
+        }
+    }
+
+    function onRemoteUserPublished(streamId) {
+        console.log('onRemoteStreamAdded');
         let videoTagId = makeRemoteStreamVideoView(streamId);
         return videoTagId;
     }
@@ -225,13 +262,13 @@ export default function CommunicationMenu(applicationConfig) {
             let remoteStreamContainer = videoStreamOuter.__createDiv('eachVideoStream', `remoteStreamContainer${streamId}`);
             let staticHTML = `
 		    <div id="${streamId}_container" class="remote-stream-container fhw">
-                <div id="${streamId}_mute" class="mute-overlay" style="display: block">
+                <div id="${streamId}_mute" class="mute-overlay" style="display: none">
                     <i class="fas fa-microphone-slash"></i>
                 </div>
                 <div class="col userName">
-                    <span>Remote : ${streamId}</span>
+                    <span class="userNameSpan">Remote:${streamId}</span>
                 </div>
-                <div id="${streamId}_no-video" class="no-video-overlay text-center">
+                <div id="${streamId}_no-video" class="no-video-overlay text-center" style="display: none">
                     <i class="fas fa-user"></i>
                 </div>
                 <div id=${videoTagParentId} class="fhw remote-video remoteVideo">
@@ -244,11 +281,17 @@ export default function CommunicationMenu(applicationConfig) {
         }
     }
 
+    //Remote Events Ended
     return {
         render: render,
-        toggleVideo: toggleVideo,
         enableUiControls: enableUiControls,
-        addRemoteStreamMiniView: addRemoteStreamMiniView,
-        toggleVisibility: toggleVisibility
+        onRemoteUserPublished: onRemoteUserPublished,
+        onRemoteMuteAudio: onRemoteMuteAudio,
+        onRemoteUnMuteAudio: onRemoteUnMuteAudio,
+        onRemoteMuteVideo: onRemoteMuteVideo,
+        onRemoteUnMuteVideo: onRemoteUnMuteVideo,
+        onRemotePeerLeave: onRemotePeerLeave,
+        highLightSpeaker: highLightSpeaker,
+        removeHighLightSpeaker: removeHighLightSpeaker
     };
 }

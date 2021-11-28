@@ -1,8 +1,17 @@
 .permissionMenu{
+  overflow: scroll;
   position: absolute;
   height: 100%;
   width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+}
+.dummyText{
+  width: 400px;
+  border: 2px seagreen solid;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: red;
+  text-align: center;
 }
